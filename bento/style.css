@@ -1,11 +1,35 @@
+ body {
+     background-image: url("../images/bg.png");
+     background-size: cover;
+     background-repeat: no-repeat;
+     background-position: center;
+     font-family:"Sniglet", system-ui;
+ }
+
  .row1 {
-      min-height: 200px;
-    }
+     min-height: 180px;
+ }
 
-    .row2 {
-      min-height: 300px;
-    }
+ .row2 {
+     min-height: 250px;
+ }
 
-    .row3 {
-      min-height: 260px;
-    }
+ .row3 {
+     min-height: 250px;
+ }
+
+ .card {
+     background: rgba(255, 255, 255, 0.311);
+     backdrop-filter: blur(12px);
+     -webkit-backdrop-filter: blur(12px);
+     border: 1px solid rgba(255, 255, 255, 0.4);
+     border-radius: 19px;
+     overflow: hidden;
+ }
+
+ .card-header {
+     background: rgba(0, 0, 0, 0.10);
+     border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+     padding: .3rem;
+ }
+
