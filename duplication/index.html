@@ -1,0 +1,56 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Duplication</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet"
+    integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
+  <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+  <div class="container-fluid overflow-hidden">
+    <div class="row">
+      <div class="col-7">
+        <h1 class="display-2">7 wonders of the world</h1>
+      </div>
+
+      <div class="col-5">
+        <div id="wonders-container" style="margin-left: 54%;">
+          
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"
+    integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI" crossorigin="anonymous">
+    </script>
+
+    <script>
+      const wondersData = [
+    { name: "Great Wall", src: "images/greatwall-side.png", bg: "images/greatwall-bg.jpg" },
+    { name: "Chichén Itzá", src: "images/chichen-side.png", bg: "images/chichen-bg.jpg" },
+    { name: "Colosseum", src: "images/colosseum-side.png", bg: "images/colosseum-bg.jpg" },
+    { name: "Christ the Redeemer", src: "images/christ-side.png", bg: "images/christ-bg.jpg" },
+    { name: "Machu Picchu", src: "images/machu-side.png", bg: "images/machupicchu-bg.jpg" },
+    { name: "Petra", src: "images/petra-side.png", bg: "images/petra-bg.jpg" },
+    { name: "Taj Mahal", src: "images/taj-side.png", bg: "images/tajmahal-bg.jpg" }
+  ];
+
+  const container = document.getElementById("wonders-container");
+
+  container.innerHTML = wondersData.map(w => `
+    <a href="#" onclick="document.body.style.backgroundImage = 'url(${w.bg})'; return false;">
+      <img src="${w.src}" style="height: 90px; width: 300px; cursor: pointer; margin-top: 10px" class="rounded shadow-sm">
+    </a>
+  `).join('');
+
+
+    </script>
+</body>
+
+</html>
