@@ -4,53 +4,139 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Duplication</title>
+  <title>7 Wonders of the World</title>
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet"
     integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
+
   <link rel="stylesheet" href="style.css">
+
 </head>
 
-<body>
-  <div class="container-fluid overflow-hidden">
+<body class="bg-dark text-white">
+  <img id="bg" class="position-fixed top-0 start-0 w-100 h-100 object-fit-cover" style="opacity: 0" alt="">
+
+  <div class="container-fluid">
     <div class="row">
-      <div class="col-7">
-        <h1 class="display-2">7 wonders of the world</h1>
+
+      <div class="col-7 position-relative p-5">
+        <h1 id="title" class="display-3 fw-bold mb-1">7 Wonders of the World</h1>
+        <p id="location" class="h5">Pick a wonder on the right to begin.</p>
+        <div id="cards"></div>
       </div>
 
-      <div class="col-5">
-        <div id="wonders-container" style="margin-left: 54%;">
-          
-        </div>
+      <div id="sidebar" class="col-5 p-5 d-flex flex-column align-items-end"></div>
 
-      </div>
     </div>
   </div>
 
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"
-    integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI" crossorigin="anonymous">
-    </script>
+  <script>
+    const wonders = [
+      {
+        name: "Great Wall of China",
+        location: "Northern China",
+        bg: "images/greatwall-bg.jpg",
+        side: "images/greatwall-side.png",
+        cards: [
+          { top: "25%", left: "5%", text: "Widely estimated at ~5,500 miles (8,850 km)." },
+          { top: "25%", left: "45%", text: "Began in the 7th century BCE and continued for two millennia." },
+          { top: "55%", left: "5%", text: "Two parallel walls, dotted with watchtowers and barracks." },
+          { top: "55%", left: "45%", text: "Largely failed as a defense; scholars call it 'political propaganda'." }
+        ]
+      },
+      {
+        name: "Chichén Itzá",
+        location: "Yucatán Peninsula, Mexico",
+        bg: "images/chichen-bg.jpg",
+        side: "images/chichen-side.png",
+        cards: [
+          { top: "30%", left: "8%", text: "A large pre-Columbian city built by the Maya people." },
+          { top: "60%", left: "30%", text: "El Castillo pyramid works as a massive physical calendar." }
+        ]
+      },
+      {
+        name: "Colosseum",
+        location: "Rome, Italy",
+        bg: "images/colosseum-bg.jpg",
+        side: "images/colosseum-side.png",
+        cards: [
+          { top: "25%", left: "10%", text: "First century amphitheatre built of travertine, tuff, and concrete." },
+          { top: "50%", left: "10%", text: "The largest ancient amphitheatre ever built." },
+          { top: "75%", left: "10%", text: "Held up to 80,000 spectators." }
+        ]
+      },
+      {
+        name: "Christ the Redeemer",
+        location: "Rio de Janeiro, Brazil",
+        bg: "images/christ-bg.jpg",
+        side: "images/christ-side.png",
+        cards: [
+          { top: "25%", left: "8%", text: "Art Deco statue designed by sculptor Paul Landowski." },
+          { top: "55%", left: "25%", text: "30 meters tall, standing on top of Corcovado mountain." }
+        ]
+      },
+      {
+        name: "Machu Picchu",
+        location: "Cuzco Region, Peru",
+        bg: "images/machupicchu-bg.jpg",
+        side: "images/machu-side.png",
+        cards: [
+          { top: "35%", left: "10%", text: "15th-century Inca citadel, 2,430 meters above sea level." }
+        ]
+      },
+      {
+        name: "Petra",
+        location: "Ma'an, Jordan",
+        bg: "images/petra-bg.jpg",
+        side: "images/petra-side.png",
+        cards: [
+          { top: "35%", left: "10%", text: "Known for its rock-cut architecture and water conduit system." }
+        ]
+      },
+      {
+        name: "Taj Mahal",
+        location: "Agra, India",
+        bg: "images/tajmahal-bg.jpg",
+        side: "images/taj-side.png",
+        cards: [
+          { top: "35%", left: "10%", text: "An ivory-white marble mausoleum on the river Yamuna." }
+        ]
+      }
+    ];
 
-    <script>
-      const wondersData = [
-    { name: "Great Wall", src: "images/greatwall-side.png", bg: "images/greatwall-bg.jpg" },
-    { name: "Chichén Itzá", src: "images/chichen-side.png", bg: "images/chichen-bg.jpg" },
-    { name: "Colosseum", src: "images/colosseum-side.png", bg: "images/colosseum-bg.jpg" },
-    { name: "Christ the Redeemer", src: "images/christ-side.png", bg: "images/christ-bg.jpg" },
-    { name: "Machu Picchu", src: "images/machu-side.png", bg: "images/machupicchu-bg.jpg" },
-    { name: "Petra", src: "images/petra-side.png", bg: "images/petra-bg.jpg" },
-    { name: "Taj Mahal", src: "images/taj-side.png", bg: "images/tajmahal-bg.jpg" }
-  ];
+    const bg = document.getElementById("bg");
+    const title = document.getElementById("title");
+    const place = document.getElementById("location");
+    const cards = document.getElementById("cards");
+    const sidebar = document.getElementById("sidebar");
 
-  const container = document.getElementById("wonders-container");
+    // Build the side images
+    sidebar.innerHTML = wonders.map((w, i) => `
+      <img class="side-img d-block mb-2 rounded shadow-sm object-fit-cover"
+           src="${w.side}" alt="${w.name}" onclick="selectWonder(${i})">
+    `).join("");
 
-  container.innerHTML = wondersData.map(w => `
-    <a href="#" onclick="document.body.style.backgroundImage = 'url(${w.bg})'; return false;">
-      <img src="${w.src}" style="height: 90px; width: 300px; cursor: pointer; margin-top: 10px" class="rounded shadow-sm">
-    </a>
-  `).join('');
+    function selectWonder(i) {
+      const w = wonders[i];
 
+      bg.style.opacity = 0;
+      setTimeout(() => {
+        bg.src = w.bg;
+        bg.style.opacity = 1;
+      }, 400);
 
-    </script>
+      title.textContent = w.name;
+      place.textContent = "📍 " + w.location;
+
+      cards.innerHTML = w.cards.map(c => `
+        <div class="glass position-absolute p-3 rounded-3" style="top: ${c.top}; left: ${c.left};">${c.text}</div>
+      `).join("");
+
+      document.querySelectorAll(".side-img").forEach((img, n) => {
+        img.classList.toggle("active", n === i);
+        img.classList.toggle("dimmed", n !== i);
+      });
+    }
+  </script>
 </body>
 
 </html>
