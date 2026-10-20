@@ -7,25 +7,20 @@
   <title>7 Wonders of the World</title>
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet"
     integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
-
   <link rel="stylesheet" href="style.css">
-
 </head>
 
 <body class="bg-dark text-white overflow-hidden">
   <img id="bg" class="position-fixed top-0 start-0 w-100 h-100 object-fit-cover" style="opacity: 0" alt="">
 
-  <div class="container-fluid ">
+  <div class="container-fluid">
     <div class="row">
-
       <div class="col-7 position-relative p-5">
         <h1 id="title" class="display-3 fw-bold mb-1">7 Wonders of the World</h1>
         <p id="location" class="h5 mt-2">Pick a wonder on the right to begin.</p>
         <div id="cards"></div>
       </div>
-
       <div id="sidebar" class="col-5 py-4 d-flex flex-column align-items-end"></div>
-
     </div>
   </div>
 
@@ -53,16 +48,17 @@
         bg: "images/chichen-bg.png",
         side: "images/chichen-side.png",
         cards: [
-          { top: "30%", left: "8%", text: "9th and 10th centuries CE" },
-          { top: "30%", left: "38%", text: "Notable Monument: El Castillo (“The Castle”)" },
-          { top: "44%", left: "8%", width: "510px", text: `
-          <ul class="mb-0 ps-3 mt-1">
-            <li>Height: 79 feet (24 meters)</li>
-            <li>Has a total of 365 steps (one for each day of the solar year).</li>
-            <li>Home to the largest tlachtli (sporting field) in the Americas.</li>
-          </ul>`
+          { top: "26%", left: "8%", text: "9th and 10th centuries CE" },
+          { top: "25%", left: "38%", text: "Notable Monument: El Castillo (“The Castle”)" },
+          {
+            top: "40%", left: "8%", width: "510px", text: `
+            <ul class="mb-0 ps-3 mt-1">
+              <li>Height: 79 feet (24 meters)</li>
+              <li>Has a total of 365 steps (one for each day of the solar year).</li>
+              <li>Home to the largest tlachtli (sporting field) in the Americas.</li>
+            </ul>`
           },
-          { top: "63%", left: "23%", text: "Influenced by the Toltecs; known for ritual ball games." },
+          { top: "58%", left: "23%", text: "Influenced by the Toltecs; known for ritual ball games." }
         ]
       },
       {
@@ -71,19 +67,44 @@
         bg: "images/colosseum-bg.png",
         side: "images/colosseum-side.png",
         cards: [
-          { top: "25%", left: "10%", text: "First century amphitheatre built of travertine, tuff, and concrete." },
-          { top: "50%", left: "10%", text: "The largest ancient amphitheatre ever built." },
-          { top: "75%", left: "10%", text: "Held up to 80,000 spectators." }
+          { top: "25%", left: "8%", text: "First century CE (Ordered by Emperor Vespasian)" },
+          { top: "25%", left: "38%", text: "Features a complex system of vaults." },
+          { top: "41%", left: "8%", text: "Held up to 80,000 spectators." },
+          { top: "40%", left: "38%", text: "Amphitheater measuring 620 by 513 feet (189 by 156 meters)." },
+          {
+            top: "58%", left: "8%", width: "510px", text: `
+            <ul class="mb-0 ps-3 mt-1">
+              <li>Hosted gladiator fights and battles between men and animals.</li>
+              <li>Estimated that 500,000 people and countless animals died there.</li>
+              <li>Capture of animals for games reportedly led to the extinction of certain species.</li>
+            </ul>`
+          }
         ]
       },
       {
         name: "Christ the Redeemer",
-        location: "Rio de Janeiro, Brazil",
+        location: "Atop Mount Corcovado, Rio de Janeiro, Brazil",
         bg: "images/christ-bg.png",
         side: "images/christ-side.png",
         cards: [
-          { top: "25%", left: "8%", text: "Art Deco statue designed by sculptor Paul Landowski." },
-          { top: "55%", left: "25%", text: "30 meters tall, standing on top of Corcovado mountain." }
+          { top: "25%", left: "8%", text: "Proposed after WWI to counter a perceived 'tide of godlessness.'" },
+          { top: "25%", left: "38%", text: "Designed by Heitor da Silva Costa, Carlos Oswald, and Paul Landowski." },
+          { top: "43%", left: "8%", text: "Began in 1926 and completed in 1931." },
+          {
+            top: "43%", left: "38%", text: `
+            <ul class="mb-0 ps-3 mt-1">
+              <li>Height: 98 feet (30 meters), excluding its 26-foot (8-meter) base.</li>
+              <li>Span: Outstretched arms span 92 feet (28 meters).</li>
+            </ul>`
+          },
+          {
+            top: "58%", left: "8%", text: `
+            <ul class="mb-0 ps-3 mt-1">
+              <li>It is the largest Art Deco sculpture in the world.</li>
+              <li>Frequently struck by lightning, which damaged Jesus's right thumb in 2014..</li>
+            </ul>`
+          },
+          { top: "68%", left: "38%", text: "Made of reinforced concrete and covered in approximately six million tiles." }
         ]
       },
       {
@@ -115,12 +136,14 @@
       }
     ];
 
-    wonders.forEach(w => {
+    // Preload images using a for loop
+    for (let i = 0; i < wonders.length; i++) {
+      const w = wonders[i];
       const bgImg = new Image();
       bgImg.src = w.bg;
       const sideImg = new Image();
       sideImg.src = w.side;
-    });
+    }
 
     const bg = document.getElementById("bg");
     const title = document.getElementById("title");
@@ -128,10 +151,15 @@
     const cards = document.getElementById("cards");
     const sidebar = document.getElementById("sidebar");
 
-    sidebar.innerHTML = wonders.map((w, i) => `
-  <img class="side-img d-block mb-2 rounded shadow-sm object-fit-cover"
-       src="${w.side}" alt="${w.name}" onclick="selectWonder(${i})">
-`).join("");
+    let sidebarHTML = "";
+    for (let i = 0; i < wonders.length; i++) {
+      const w = wonders[i];
+      sidebarHTML += `
+        <img class="side-img d-block mb-2 rounded shadow-sm object-fit-cover"
+             src="${w.side}" alt="${w.name}" onclick="selectWonder(${i})">
+      `;
+    }
+    sidebar.innerHTML = sidebarHTML;
 
     function selectWonder(i) {
       const w = wonders[i];
@@ -145,14 +173,20 @@
       title.textContent = w.name;
       place.textContent = "📍 " + w.location;
 
-      cards.innerHTML = w.cards.map(c => `
-    <div class="glass position-absolute p-3 rounded-3" style="top: ${c.top}; left: ${c.left}; ${c.width ? 'width: ' + c.width + ';' : ''}">${c.text}</div>
-  `).join("");
+      let cardsHTML = "";
+      for (let j = 0; j < w.cards.length; j++) {
+        const c = w.cards[j];
+        cardsHTML += `
+          <div class="glass position-absolute p-3 rounded-3" style="top: ${c.top}; left: ${c.left}; ${c.width ? 'width: ' + c.width + ';' : ''}">${c.text}</div>
+        `;
+      }
+      cards.innerHTML = cardsHTML;
 
-      document.querySelectorAll(".side-img").forEach((img, n) => {
-        img.classList.toggle("active", n === i);
-        img.classList.toggle("dimmed", n !== i);
-      });
+      const sideImgs = document.querySelectorAll(".side-img");
+      for (let n = 0; n < sideImgs.length; n++) {
+        sideImgs[n].classList.toggle("active", n === i);
+        sideImgs[n].classList.toggle("dimmed", n !== i);
+      }
     }
   </script>
 </body>
