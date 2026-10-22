@@ -197,9 +197,6 @@
       const w = wonders[i];
       sidebarHTML += `
         <div class="col-6 col-md-4 col-xl-12 d-flex justify-content-center justify-content-xl-end p-1 p-xl-0">
-          <!-- The wrapper is the .side-img: it matches the image's 300x90 shape (30%), so nothing is cropped
-               and the rounded corners clip the picture itself. w-100 h-auto override the fixed size in style.css.
-               max-width shrinks the thumbnails on short screens so all 7 fit without scrolling -->
           <div class="side-img ratio w-100 h-auto mb-2 rounded shadow-sm overflow-hidden"
                style="--bs-aspect-ratio: 30%; max-width: min(300px, calc((100vh - 110px) / 2.1));" onclick="selectWonder(${i})">
             <img class="object-fit-cover" src="${w.side}" alt="${w.name}">
@@ -231,7 +228,7 @@
         `;
         mobileHTML += `
           <div class="col">
-            <div class="glass w-100 p-3 rounded-3 h-100">${c.text}</div>
+            <div class="glass d-inline-block w-auto mw-100 p-3 rounded-3">${c.text}</div>
           </div>
         `;
       }
