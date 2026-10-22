@@ -10,17 +10,19 @@
   <link rel="stylesheet" href="style.css">
 </head>
 
-<body class="bg-dark text-white overflow-hidden">
+<body class="bg-dark text-white min-vh-100 overflow-x-hidden">
   <img id="bg" class="position-fixed top-0 start-0 w-100 h-100 object-fit-cover" style="opacity: 0" alt="">
+  <div class="position-fixed top-0 start-0 w-100 h-100 bg-black bg-opacity-50 pe-none"></div>
 
-  <div class="container-fluid">
+  <div class="container-fluid position-relative">
     <div class="row">
-      <div class="col-7 position-relative p-5">
+      <div class="col-12 col-xl-7 position-relative p-3 p-xl-5">
         <h1 id="title" class="display-3 fw-bold mb-1">7 Wonders of the World</h1>
-        <p id="location" class="h5 mt-2">Pick a wonder on the right to begin.</p>
+        <p id="location" class="h5 mt-2">Pick a wonder<span class="d-none d-xl-inline"> on the right</span> to begin.</p>
         <div id="cards"></div>
       </div>
-      <div id="sidebar" class="col-5 py-4 d-flex flex-column align-items-end"></div>
+      <div id="sidebar"
+        class="col-12 col-xl-5 order-first order-xl-last py-4"></div>
     </div>
   </div>
 
@@ -176,7 +178,6 @@
       }
     ];
 
-    // Preload images using a for loop
     for (let i = 0; i < wonders.length; i++) {
       const w = wonders[i];
       const bgImg = new Image();
@@ -191,14 +192,22 @@
     const cards = document.getElementById("cards");
     const sidebar = document.getElementById("sidebar");
 
-    let sidebarHTML = "";
+    let sidebarHTML = '<div class="row g-0">';
     for (let i = 0; i < wonders.length; i++) {
       const w = wonders[i];
       sidebarHTML += `
-        <img class="side-img d-block mb-2 rounded shadow-sm object-fit-cover"
-             src="${w.side}" alt="${w.name}" onclick="selectWonder(${i})">
+        <div class="col-6 col-md-4 col-xl-12 d-flex justify-content-center justify-content-xl-end p-1 p-xl-0">
+          <!-- The wrapper is the .side-img: it matches the image's 300x90 shape (30%), so nothing is cropped
+               and the rounded corners clip the picture itself. w-100 h-auto override the fixed size in style.css.
+               max-width shrinks the thumbnails on short screens so all 7 fit without scrolling -->
+          <div class="side-img ratio w-100 h-auto mb-2 rounded shadow-sm overflow-hidden"
+               style="--bs-aspect-ratio: 30%; max-width: min(300px, calc((100vh - 110px) / 2.1));" onclick="selectWonder(${i})">
+            <img class="object-fit-cover" src="${w.side}" alt="${w.name}">
+          </div>
+        </div>
       `;
     }
+    sidebarHTML += "</div>";
     sidebar.innerHTML = sidebarHTML;
 
     function selectWonder(i) {
@@ -213,14 +222,23 @@
       title.textContent = w.name;
       place.textContent = "📍 " + w.location;
 
-      let cardsHTML = "";
+      let desktopHTML = "";
+      let mobileHTML = "";
       for (let j = 0; j < w.cards.length; j++) {
         const c = w.cards[j];
-        cardsHTML += `
+        desktopHTML += `
           <div class="glass position-absolute p-3 rounded-3" style="top: ${c.top}; left: ${c.left}; ${c.width ? 'width: ' + c.width + ';' : ''}">${c.text}</div>
         `;
+        mobileHTML += `
+          <div class="col">
+            <div class="glass w-100 p-3 rounded-3 h-100">${c.text}</div>
+          </div>
+        `;
       }
-      cards.innerHTML = cardsHTML;
+      cards.innerHTML = `
+        <div class="d-none d-xl-block">${desktopHTML}</div>
+        <div class="row row-cols-1 row-cols-md-2 g-3 mt-1 d-xl-none">${mobileHTML}</div>
+      `;
 
       const sideImgs = document.querySelectorAll(".side-img");
       for (let n = 0; n < sideImgs.length; n++) {
