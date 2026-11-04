@@ -13,6 +13,8 @@ const slotNames = {
     Passive: 'PASSIVE'
 };
 
+var isSmall = window.innerWidth < 992;
+
 var elParent = document.getElementById("parent");
 var elCurrentPage = document.getElementById("currentpage");
 var elSearch = document.getElementById("search");
@@ -28,7 +30,7 @@ var agentModal = new bootstrap.Modal(document.getElementById("agentModal"));
 var currentAbilities = [];
 
 var page = 1;
-var perPage = 8;
+var perPage = isSmall ? 12 : 8;
 var finalPage = 1;
 
 const getAgents = async () => {
@@ -89,7 +91,7 @@ function showAgents() {
         var roleColor = roleColors[role.toLowerCase()] || accent;
 
         html += `
-          <div class="col-3">
+          <div class="col-6 col-lg-3">
             <div class="agent-card" onclick="openAgent('${agent.uuid}')" style="--role: ${roleColor}; --accent: ${accent}; --accent-soft: ${accentSoft};">
               <div class="bg-name">${agent.displayName}</div>
               <img class="agent-img" src="${agent.fullPortrait}" alt="${agent.displayName}">
@@ -192,7 +194,7 @@ var allMaps = [];
 var filteredMaps = [];
 var mapSearchText = "";
 var mapCurrent = 1;
-var mapPerPage = 3;
+var mapPerPage = isSmall ? 12 : 3;
 var mapFinalPage = 1;
 
 var mapModal = new bootstrap.Modal(document.getElementById("mapModal"));
@@ -212,7 +214,7 @@ function applyMapFilters() {
 }
 
 function showMaps() {
-      elMapPage.innerHTML = "<b>" + String(mapCurrent).padStart(2, "0") + "</b> / " + String(mapFinalPage).padStart(2, "0");
+    elMapPage.innerHTML = "<b>" + String(mapCurrent).padStart(2, "0") + "</b> / " + String(mapFinalPage).padStart(2, "0");
 
     if (filteredMaps.length == 0) {
         elMapParent.innerHTML = '<div class="text-center text-white fs-4">No maps found.</div>';
@@ -226,7 +228,7 @@ function showMaps() {
 
     pageMaps.forEach(map => {
         html += `
-          <div class="col-4">
+          <div class="col-6 col-lg-4">
             <div class="map-card" onclick="openMap('${map.uuid}')">
               <img class="map-img" src="${map.splash}" alt="${map.displayName}">
               <div class="map-coords">${map.coordinates || ""}</div>

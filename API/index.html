@@ -14,28 +14,28 @@
 
 <body>
   <div class="container-fluid hero-section px-0 overflow-hidden min-vh-100" id="Play">
-    <div class="nav d-flex justify-content-between align-items-center">
-      <div class="left-nav d-flex align-items-center gap-4">
+    <div class="nav d-flex flex-wrap justify-content-between align-items-center gap-1 px-2">
+      <div class="left-nav d-flex align-items-center gap-2 gap-md-4">
         <img src="images/valorant-logo.png">
         <a href="#Play">PLAY</a>
         <a href="#Agents">AGENTS</a>
         <a href="#Maps">MAPS</a>
       </div>
 
-      <div class="right-nav d-flex align-items-center gap-4 p-2">
+      <div class="right-nav d-flex align-items-center gap-2 gap-md-4 p-2">
         <a href="#Signin">SIGN IN</a>
         <button class="download-btn">DOWNLOAD</button>
       </div>
     </div>
 
-    <div class="hero-content p-5">
-      <h1 class="title  mt-5">Valorant</h1>
-      <p class="fs-4 ps-5 mb-0">THE TACTICAL HERO SHOOTER.</p>
-      <p class="fs-4 ps-5 mb-0">MASTER YOUR ABILITIES. CONQUER THE SITE.</p>
-      <a href="#Agents" class="play text-decoration-none">PLAY FOR FREE</a>
+    <div class="hero-content p-3 p-md-5 text-center text-md-start">
+      <h1 class="title mt-5">Valorant</h1>
+      <p class="hero-text ps-0 ps-md-5 mb-0">THE TACTICAL HERO SHOOTER.</p>
+      <p class="hero-text ps-0 ps-md-5 mb-0">MASTER YOUR ABILITIES. CONQUER THE SITE.</p>
+      <a href="#Agents" class="play ms-0 ms-md-5 text-decoration-none">PLAY FOR FREE</a>
     </div>
 
-    <div class="hero-bottom text-center">
+    <div class="hero-bottom text-center px-2">
       <h1 class="text-white mb-0" style="font-family: 'Motion-control';">DEFY THE LIMITS</h1>
       <h1 class="outline">CHOOSE YOUR AGENT</h1>
     </div>
@@ -69,15 +69,15 @@
     </div>
   </div>
 
-  <div class="agent-select container-fluid px-4 py-1" id="Agents">
+  <div class="agent-select container-fluid px-3 px-md-4 py-1" id="Agents">
     <div class="row align-items-center g-3">
 
-      <div class="col-4 d-flex align-items-center gap-3">
+      <div class="col-12 col-lg-4 d-flex align-items-center justify-content-center justify-content-lg-start gap-3">
         <img src="images/spike.png" style="width: 50px; height: 50px;">
-        <h1 class="mb-0 text-white" style="font-family: 'Motion-control'; font-size: 2rem;">// AGENT SELECT</h1>
+        <h1 class="mb-0 text-white" style="font-family: 'Motion-control'; font-size: clamp(1.25rem, 5vw, 2rem);">// AGENT SELECT</h1>
       </div>
 
-      <div class="col-4">
+      <div class="col-12 col-lg-4">
         <div class="role-wrap d-flex flex-wrap justify-content-center gap-2 mx-auto" style="max-width: 360px;">
           <button class="role-btn active" data-role="all"><span>ALL</span></button>
           <button class="role-btn initiator" data-role="initiator"><span>INITIATOR</span></button>
@@ -87,12 +87,12 @@
         </div>
       </div>
 
-      <div class="col-4 d-flex">
-        <input type="search" class="form-control agent-search ms-auto" id="search" placeholder="SEARCH AGENT....">
+      <div class="col-12 col-lg-4 d-flex">
+        <input type="search" class="form-control agent-search mx-auto me-lg-0 ms-lg-auto" id="search" placeholder="SEARCH AGENT....">
       </div>
 
       <div class="container mt-4">
-        <div class="row g-4" id="parent">
+        <div class="row g-2 g-md-4" id="parent">
 
         </div>
 
@@ -118,7 +118,7 @@
   </div>
 
   <div class="maps-section" id="Maps">
-    <div class="maps-watermark">VALORANT</div>
+    <div class="maps-watermark d-none d-md-block">VALORANT</div>
 
     <div class="container position-relative" style="z-index: 1;">
       <div class="maps-head">
@@ -128,16 +128,16 @@
       </div>
 
       <div class="row align-items-center g-3 mt-3">
-        <div class="col-4"></div>
-        <div class="col-4 text-center">
-          <h1 class="maps-title mb-0" style="font-size: 2rem;">// SELECT YOUR MAP</h1>
+        <div class="col-lg-4 d-none d-lg-block"></div>
+        <div class="col-12 col-lg-4 text-center">
+          <h1 class="maps-title mb-0" style="font-size: clamp(1.25rem, 5vw, 2rem);">// SELECT YOUR MAP</h1>
         </div>
-        <div class="col-4 d-flex">
-          <input type="search" class="form-control agent-search ms-auto" id="searchMap" placeholder="SEARCH MAP....">
+        <div class="col-12 col-lg-4 d-flex">
+          <input type="search" class="form-control agent-search mx-auto me-lg-0 ms-lg-auto" id="searchMap" placeholder="SEARCH MAP....">
         </div>
       </div>
 
-      <div class="row g-4 mt-2" id="mapParent"></div>
+      <div class="row g-2 g-md-4 mt-2" id="mapParent"></div>
 
       <div class="pager">
         <button class="pager-btn" onclick="prevMap()" aria-label="Previous page">
@@ -160,69 +160,73 @@
   </div>
 
   <div class="modal fade" id="agentModal" tabindex="-1" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered modal-lg">
+    <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable modal-lg modal-fullscreen-md-down">
       <div class="modal-content agent-modal" id="agentModalContent">
 
         <button class="close-x" data-bs-dismiss="modal">X</button>
 
-        <div class="row g-0 align-items-center">
+        <div class="modal-body p-0">
+          <div class="row g-0 align-items-center">
 
-          <div class="col-5">
-            <div class="modal-portrait">
-              <div class="bg-name" id="mBgName"></div>
-              <img id="mPortrait" src="" alt="">
-            </div>
-          </div>
-
-          <div class="col-7 p-4 pe-5">
-            <div class="d-flex align-items-center gap-3 mb-2">
-              <div class="role-pill">
-                <img id="mRoleIcon" src="" alt="">
-                <span id="mRole"></span>
+            <div class="col-12 col-md-5">
+              <div class="modal-portrait">
+                <div class="bg-name" id="mBgName"></div>
+                <img id="mPortrait" src="" alt="">
               </div>
-              <div class="agent-no" id="mNumber"></div>
             </div>
 
-            <h2 class="m-name" id="mName"></h2>
-            <p class="m-desc" id="mDesc"></p>
-
-            <div class="m-heading">// Tactical Abilities</div>
-            <div class="ability-row" id="mAbilityRow"></div>
-
-            <div class="ability-info">
-              <div class="d-flex justify-content-between align-items-center mb-2">
-                <div class="ability-name" id="mAbilityName"></div>
-                <div class="ability-tag" id="mAbilityTag"></div>
+            <div class="col-12 col-md-7 p-3 p-md-4 pe-md-5">
+              <div class="d-flex flex-wrap align-items-center gap-3 mb-2">
+                <div class="role-pill">
+                  <img id="mRoleIcon" src="" alt="">
+                  <span id="mRole"></span>
+                </div>
+                <div class="agent-no" id="mNumber"></div>
               </div>
-              <p class="ability-desc" id="mAbilityDesc"></p>
-            </div>
-          </div>
 
+              <h2 class="m-name" id="mName"></h2>
+              <p class="m-desc" id="mDesc"></p>
+
+              <div class="m-heading">// Tactical Abilities</div>
+              <div class="ability-row" id="mAbilityRow"></div>
+
+              <div class="ability-info">
+                <div class="d-flex justify-content-between align-items-center mb-2">
+                  <div class="ability-name" id="mAbilityName"></div>
+                  <div class="ability-tag" id="mAbilityTag"></div>
+                </div>
+                <p class="ability-desc" id="mAbilityDesc"></p>
+              </div>
+            </div>
+
+          </div>
         </div>
       </div>
     </div>
   </div>
 
   <div class="modal fade" id="mapModal" tabindex="-1" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered modal-lg">
+    <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable modal-lg modal-fullscreen-md-down">
       <div class="modal-content map-modal" id="mapModalContent">
         <button class="close-x" data-bs-dismiss="modal">X</button>
 
-        <div class="d-flex justify-content-between align-items-center mb-3 pe-4">
-          <h2 class="map-m-name mb-0" id="mapMName"></h2>
-          <div class="map-m-coords" id="mapMCoords"></div>
-        </div>
-
-        <div class="row g-3">
-          <div class="col-6">
-            <div class="map-panel">
-              <div class="map-site" id="mapMSite"></div>
-              <img id="mapMIcon" src="" alt="">
-            </div>
+        <div class="modal-body p-3 p-md-4">
+          <div class="d-flex flex-wrap justify-content-between align-items-center gap-2 mb-3 pe-4">
+            <h2 class="map-m-name mb-0" id="mapMName"></h2>
+            <div class="map-m-coords" id="mapMCoords"></div>
           </div>
-          <div class="col-6">
-            <div class="m-heading">// CALLOUTS</div>
-            <div class="map-panel callout-box" id="mapMCallouts"></div>
+
+          <div class="row g-3">
+            <div class="col-12 col-md-6">
+              <div class="map-panel">
+                <div class="map-site" id="mapMSite"></div>
+                <img id="mapMIcon" src="" alt="">
+              </div>
+            </div>
+            <div class="col-12 col-md-6">
+              <div class="m-heading">// CALLOUTS</div>
+              <div class="map-panel callout-box" id="mapMCallouts"></div>
+            </div>
           </div>
         </div>
       </div>
