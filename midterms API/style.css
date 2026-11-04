@@ -3,6 +3,14 @@
     margin: 0;
 }
 
+body {
+    background-color: #0A1017;
+}
+
+body::-webkit-scrollbar {
+    display: none;
+}
+
 @font-face {
     font-family: 'Motion-control';
     src: url('fonts/motion-control/MotionControl-Bold.otf') format('opentype');
@@ -11,6 +19,12 @@
 @font-face {
     font-family: 'Valorant';
     src: url('fonts/valorant/Valorant Font.ttf') format('truetype');
+}
+
+.rajdhani-regular {
+    font-family: "Rajdhani", sans-serif;
+    font-weight: 400;
+    font-style: normal;
 }
 
 .hero-section {
@@ -22,7 +36,7 @@
     font-family: 'Motion-control';
     text-decoration: none;
     color: white;
-    font-size: 1.5rem;
+    font-size: 1rem;
     position: relative;
 }
 
@@ -46,7 +60,7 @@
     background-color: #0f1923;
     color: #ffffff;
     font-family: 'Motion-control';
-    font-size: 1.5rem;
+    font-size: 1rem;
     padding: 6px;
     border: 2px solid #FE4350;
     border-radius: 6px;
@@ -61,7 +75,7 @@
 
 .title {
     font-family: 'Valorant';
-    font-size: 7rem;
+    font-size: 5rem;
     color: #FE4350;
 }
 
@@ -77,7 +91,7 @@ p {
     font-family: 'Motion-control';
     margin-top: 1rem;
     margin-left: 3rem;
-    font-size: 1.5rem;
+    font-size: 1rem;
     padding: 10px 30px;
     text-align: center;
     clip-path: polygon(0 0, calc(100% - 12px) 0, 100% 12px, 100% 100%, 12px 100%, 0 calc(100% - 12px));
@@ -86,7 +100,7 @@ p {
 
 
 .hero-bottom {
-    margin-top: 6rem;
+    margin-top: 3rem;
 }
 
 .outline {
@@ -118,13 +132,384 @@ p {
     color: black;
     letter-spacing: 2px;
     flex-shrink: 0;
+    padding-left: 1.5rem;
 }
 
 @keyframes marquee {
-  0% {
-    transform: translateX(0%);
-  }
-  100% {
-    transform: translateX(-10%);
-  }
+    0% {
+        transform: translateX(0%);
+    }
+
+    100% {
+        transform: translateX(-10%);
+    }
+}
+
+.role-btn {
+    --c: #FE4350;
+    --cut: 10px;
+    --shape: polygon(0 0,
+            calc(100% - var(--cut)) 0,
+            100% var(--cut),
+            100% 100%,
+            var(--cut) 100%,
+            0 calc(100% - var(--cut)));
+
+    position: relative;
+    isolation: isolate;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 18px;
+    background: transparent;
+    border: none;
+    color: #ffffff;
+    font-family: 'Motion-control';
+    font-size: 1rem;
+    letter-spacing: 1px;
+    transition: filter 0.2s ease-in-out;
+}
+
+.role-btn::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    z-index: -2;
+    background: var(--c);
+    clip-path: var(--shape);
+}
+
+.role-btn::after {
+    content: "";
+    position: absolute;
+    inset: 2px;
+    z-index: -1;
+    background: #0f1923;
+    clip-path: polygon(0 0,
+            calc(100% - 8px) 0,
+            100% 8px,
+            100% 100%,
+            8px 100%,
+            0 calc(100% - 8px));
+    transition: background 0.2s ease-in-out;
+}
+
+.role-btn img {
+    height: 20px;
+}
+
+.role-btn.initiator {
+    --c: #6b5bd6;
+}
+
+.role-btn.duelist {
+    --c: #FE4350;
+}
+
+.role-btn.controller {
+    --c: #FE4350;
+}
+
+.role-btn.sentinel {
+    --c: #2fd4c4;
+}
+
+.role-btn:hover {
+    filter: drop-shadow(0 0 6px var(--c));
+}
+
+.role-btn.active::after {
+    background: var(--c);
+}
+
+.role-btn.active {
+    filter: drop-shadow(0 0 8px var(--c));
+}
+
+.agent-search {
+  width: 250px; 
+  height: auto;
+  background-color: #0f1923;
+  color: #ffffff;
+  font-family: 'Motion-control', sans-serif;
+  font-size: 1rem;
+  padding: 8px 16px;
+  border: 2px solid #FE4350;
+  border-radius: 6px;
+  transition: all 0.2s ease-in-out;
+}
+
+.agent-search::placeholder {
+  color: rgba(255, 255, 255, 0.6);
+  font-family: 'Motion-control', sans-serif;
+}
+
+.agent-search:focus {
+  background-color: #0f1923;
+  color: #ffffff;
+  border-color: #FE4350;
+  box-shadow: 0 0 10px rgba(254, 67, 80, 0.5);
+  outline: none;
+}
+
+.agent-card {
+    position: relative;
+    overflow: hidden;
+    aspect-ratio: 3 / 4;
+    border: 1px solid var(--role);
+    border-radius: 4px;
+    cursor: pointer;
+    background:
+        linear-gradient(120deg, transparent 0 30%, var(--accent-soft) 30% 75%, transparent 75% 100%),
+        #181b24;
+}
+
+.agent-card .bg-name {
+    position: absolute;
+    top: 0;
+    right: 6px;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    writing-mode: vertical-rl;
+    font-size: 3.6rem;
+    font-weight: 800;
+    line-height: 1;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    color: transparent;
+    -webkit-text-stroke: 1px rgba(255, 255, 255, 0.35);
+    z-index: 1;
+    opacity: 50%;
+}
+
+.agent-card .agent-img {
+    position: absolute;
+    bottom: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    height: 100%;
+    width: auto;
+    max-width: none;
+    z-index: 2;
+}
+
+.agent-card .role {
+    position: absolute;
+    top: 12px;
+    right: 14px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    color: #fff;
+    font-weight: 800;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    text-shadow: 0 2px 6px rgba(0, 0, 0, 0.6);
+    z-index: 3;
+}
+
+.agent-card .role-icon {
+    width: 18px;
+    height: 18px;
+    filter: brightness(0) invert(1);
+}
+
+.agent-card .name {
+    position: absolute;
+    left: 10px;
+    bottom: 10px;
+    color: #fff;
+    font-size: 1.4rem;
+    font-weight: 800;
+    text-transform: uppercase;
+    padding-bottom: 2px;
+    border-bottom: 3px solid var(--accent);
+    text-shadow: 0 2px 6px rgba(0, 0, 0, 0.6);
+    z-index: 3;
+}
+
+.agent-modal {
+    position: relative;
+    overflow: hidden;
+    color: #fff;
+    border: 1px solid var(--role);
+    border-radius: 8px;
+    background:
+        radial-gradient(circle at 20% 30%, var(--accent-soft), transparent 55%),
+        #12151d;
+}
+
+.agent-modal .close-x {
+    position: absolute;
+    top: 14px;
+    right: 20px;
+    z-index: 5;
+    background: none;
+    border: none;
+    color: #fff;
+    font-family: 'Motion-control';
+    font-size: 1.3rem;
+}
+
+.agent-modal .close-x:hover {
+    color: var(--role);
+}
+
+.agent-modal .sound-btn {
+    position: absolute;
+    top: 14px;
+    left: 18px;
+    z-index: 5;
+    background: none;
+    border: none;
+    opacity: 0.9;
+    transition: transform 0.15s ease-in-out;
+}
+
+.agent-modal .sound-btn:hover {
+    transform: scale(1.1);
+}
+
+.modal-portrait {
+    position: relative;
+    height: 420px;
+    overflow: hidden;
+}
+
+.modal-portrait .bg-name {
+    position: absolute;
+    top: 0;
+    right: 6px;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    writing-mode: vertical-rl;
+    font-family: 'Motion-control';
+    font-size: 3.2rem;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    color: transparent;
+    -webkit-text-stroke: 1px rgba(255, 255, 255, 0.35);
+    z-index: 1;
+}
+
+.modal-portrait img {
+    position: absolute;
+    bottom: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    height: 95%;
+    width: auto;
+    max-width: none;
+    z-index: 2;
+}
+
+.role-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 3px 12px;
+    border: 1px solid var(--role);
+    border-radius: 6px;
+    background: #0f1923;
+    font-family: 'Motion-control';
+    font-size: 0.8rem;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+}
+
+.role-pill img {
+    width: 16px;
+    height: 16px;
+    filter: brightness(0) invert(1);
+}
+
+.agent-no {
+    font-family: 'Motion-control';
+    font-size: 1.2rem;
+    color: #9aa3b2;
+}
+
+.m-name {
+    font-family: 'Motion-control';
+    font-size: 2rem;
+    text-transform: uppercase;
+    margin-bottom: 10px;
+}
+
+.m-desc {
+    font-size: 0.8rem;
+    line-height: 1.5;
+    color: #b6bcc8;
+    margin-bottom: 18px;
+    font-family: "Rajdhani", sans-serif;
+}
+
+.m-heading {
+    font-family: 'Motion-control';
+    font-size: 1.3rem;
+    margin-bottom: 14px;
+}
+
+.ability-row {
+    display: flex;
+    justify-content: center;
+    gap: 18px;
+    margin-bottom: 18px;
+}
+
+.ability-icon {
+    width: 54px;
+    height: 54px;
+    padding: 8px;
+    border: 2px solid transparent;
+    border-radius: 50%;
+    cursor: pointer;
+    opacity: 0.55;
+    transition: all 0.2s ease-in-out;
+}
+
+.ability-icon:hover {
+    opacity: 1;
+}
+
+.ability-icon.active {
+    opacity: 1;
+    border-color: #fff;
+    box-shadow: 0 0 14px var(--role);
+}
+
+.ability-info {
+    padding: 0 8px;
+}
+
+.ability-name {
+    font-family: 'Motion-control';
+    font-size: 1rem;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+}
+
+.ability-tag {
+    padding: 2px 16px;
+    border-radius: 6px;
+    background: #2a2d38;
+    font-family: 'Motion-control';
+    font-size: 0.85rem;
+    letter-spacing: 0.05em;
+}
+
+.ability-tag.ultimate {
+    background: #FE4350;
+    box-shadow: 0 0 12px #FE4350;
+}
+
+.ability-desc {
+    font-size: 0.72rem;
+    line-height: 1.5;
+    color: #b6bcc8;
+    font-family: "Rajdhani", sans-serif;
 }
