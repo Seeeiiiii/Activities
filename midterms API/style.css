@@ -84,18 +84,47 @@ p {
     transition: background-color 0.2s ease-in-out, transform 0.2s ease-in-out;
 }
 
-.play {
-    background-color: #FE4350;
-    color: #ffffff;
-    transform: translateY(-2px);
-}
 
-.hero-bottom{
+.hero-bottom {
     margin-top: 6rem;
 }
 
 .outline {
     font-family: 'Motion-control';
-    color: transparent; 
+    color: transparent;
     -webkit-text-stroke: 1px #ffffff;
+}
+
+.horizontal-scroll-section {
+    background-color: #FE4350;
+    overflow: hidden;
+    white-space: nowrap;
+    padding: 10px 0;
+    width: 100%;
+}
+
+.horizontal-track {
+    display: flex;
+    width: max-content;
+    animation: marquee 18s linear infinite;
+}
+
+.horizontal-content {
+    display: flex;
+    align-items: center;
+    gap: 1.5rem;
+    font-family: 'Motion-control';
+    font-size: 1.25rem;
+    color: black;
+    letter-spacing: 2px;
+    flex-shrink: 0;
+}
+
+@keyframes marquee {
+  0% {
+    transform: translateX(0%);
+  }
+  100% {
+    transform: translateX(-10%);
+  }
 }
