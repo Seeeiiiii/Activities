@@ -66,7 +66,7 @@ function applyFilters() {
 }
 
 function showAgents() {
-    elCurrentPage.innerHTML = page + " / " + finalPage;
+    elCurrentPage.innerHTML = "<b>" + String(page).padStart(2, "0") + "</b> / " + String(finalPage).padStart(2, "0");
 
     if (filtered.length == 0) {
         elParent.innerHTML = '<div class="text-center text-white fs-4">No agents found.</div>';
@@ -183,3 +183,131 @@ function next() {
 }
 
 getAgents();
+
+var elMapParent = document.getElementById("mapParent");
+var elMapPage = document.getElementById("mapPage");
+var elMapSearch = document.getElementById("searchMap");
+
+var allMaps = [];
+var filteredMaps = [];
+var mapSearchText = "";
+var mapCurrent = 1;
+var mapPerPage = 3;
+var mapFinalPage = 1;
+
+var mapModal = new bootstrap.Modal(document.getElementById("mapModal"));
+
+const getMaps = async () => {
+    const response = await fetch('https://valorant-api.com/v1/maps');
+    const result = await response.json();
+    allMaps = result.data.filter(m => m.tacticalDescription && m.displayIcon);
+    applyMapFilters();
+}
+
+function applyMapFilters() {
+    filteredMaps = allMaps.filter(m => m.displayName.toLowerCase().includes(mapSearchText));
+    mapFinalPage = Math.max(1, Math.ceil(filteredMaps.length / mapPerPage));
+    mapCurrent = 1;
+    showMaps();
+}
+
+function showMaps() {
+      elMapPage.innerHTML = "<b>" + String(mapCurrent).padStart(2, "0") + "</b> / " + String(mapFinalPage).padStart(2, "0");
+
+    if (filteredMaps.length == 0) {
+        elMapParent.innerHTML = '<div class="text-center text-white fs-4">No maps found.</div>';
+        return;
+    }
+
+    var start = (mapCurrent - 1) * mapPerPage;
+    var pageMaps = filteredMaps.slice(start, start + mapPerPage);
+
+    var html = '';
+
+    pageMaps.forEach(map => {
+        html += `
+          <div class="col-4">
+            <div class="map-card" onclick="openMap('${map.uuid}')">
+              <img class="map-img" src="${map.splash}" alt="${map.displayName}">
+              <div class="map-coords">${map.coordinates || ""}</div>
+              <div class="map-name">${map.displayName}</div>
+              <svg class="map-icon" viewBox="0 0 24 24">
+                <path d="M9 4L3 6v14l6-2 6 2 6-2V4l-6 2-6-2zM9 4v14M15 6v14" />
+              </svg>
+            </div>
+          </div>
+        `;
+    });
+
+    elMapParent.innerHTML = html;
+}
+
+function openMap(uuid) {
+    var map = allMaps.find(m => m.uuid == uuid);
+
+    document.getElementById("mapModalContent").style.backgroundImage =
+        "linear-gradient(rgba(10,16,23,0.55), rgba(10,16,23,0.8)), url(" + map.splash + ")";
+
+    document.getElementById("mapMName").innerHTML = map.displayName;
+    document.getElementById("mapMCoords").innerHTML = map.coordinates || "";
+    document.getElementById("mapMSite").innerHTML = map.tacticalDescription;
+    document.getElementById("mapMIcon").src = map.displayIcon;
+
+    var calloutHtml = '';
+    (map.callouts || []).forEach(c => {
+        calloutHtml += `<span class="callout-chip">${c.regionName} (${c.superRegionName})</span>`;
+    });
+    document.getElementById("mapMCallouts").innerHTML = calloutHtml || '<span class="callout-chip">No callouts</span>';
+
+    mapModal.show();
+}
+
+elMapSearch.addEventListener("input", () => {
+    mapSearchText = elMapSearch.value.trim().toLowerCase();
+    applyMapFilters();
+});
+
+function prevMap() {
+    mapCurrent -= 1;
+    if (mapCurrent == 0) {
+        mapCurrent = mapFinalPage;
+    }
+    showMaps();
+}
+
+function nextMap() {
+    mapCurrent += 1;
+    if (mapCurrent > mapFinalPage) {
+        mapCurrent = 1;
+    }
+    showMaps();
+}
+
+getMaps();
+
+var navLinks = document.querySelectorAll(".left-nav a");
+var navSections = ["Play", "Agents", "Maps"];
+
+function setActive(id) {
+    navLinks.forEach(a => a.classList.toggle("active", a.getAttribute("href") == "#" + id));
+}
+
+function updateNav() {
+    var current = "Play";
+    var atBottom = window.innerHeight + window.scrollY >= document.documentElement.scrollHeight - 5;
+
+    if (atBottom) {
+        current = "Maps";
+    } else {
+        navSections.forEach(id => {
+            var el = document.getElementById(id);
+            if (el && el.getBoundingClientRect().top <= 120) {
+                current = id;
+            }
+        });
+    }
+    setActive(current);
+}
+
+window.addEventListener("scroll", updateNav);
+updateNav();
