@@ -385,7 +385,7 @@ p {
     border: none;
     color: #fff;
     font-family: 'Motion-control';
-    font-size: 1.3rem;
+    font-size: 2rem;
 }
 
 .agent-modal .close-x:hover {
@@ -786,7 +786,7 @@ p {
     border: none;
     color: #fff;
     font-family: 'Motion-control';
-    font-size: 1.1rem;
+    font-size: 2rem;
 }
 
 .map-modal .close-x:hover {
