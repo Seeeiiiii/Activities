@@ -38,29 +38,36 @@ const getAgents = async () => {
     const result = await response.json();
     allAgents = result.data;
 
-    allAgents.forEach(agent => {
+    for (let i = 0; i < allAgents.length; i++) {
+        const agent = allAgents[i];
         if (agent.role) {
             roleIcons[agent.role.displayName.toLowerCase()] = agent.role.displayIcon;
         }
-    });
+    }
 
-    roleButtons.forEach(btn => {
-        var icon = roleIcons[btn.dataset.role];
+    for (let i = 0; i < roleButtons.length; i++) {
+        var icon = roleIcons[roleButtons[i].dataset.role];
         if (icon) {
-            btn.insertAdjacentHTML("afterbegin", `<img src="${icon}" alt="">`);
+            roleButtons[i].insertAdjacentHTML("afterbegin", '<img src="' + icon + '" alt="">');
         }
-    });
+    }
 
     applyFilters();
 }
 
 function applyFilters() {
-    filtered = allAgents.filter(agent => {
+    filtered = [];
+
+    for (let i = 0; i < allAgents.length; i++) {
+        const agent = allAgents[i];
         var role = agent.role ? agent.role.displayName.toLowerCase() : "";
         var matchRole = currentRole == "all" || role == currentRole;
         var matchName = agent.displayName.toLowerCase().includes(searchText);
-        return matchRole && matchName;
-    });
+
+        if (matchRole && matchName) {
+            filtered.push(agent);
+        }
+    }
 
     finalPage = Math.max(1, Math.ceil(filtered.length / perPage));
     page = 1;
@@ -69,43 +76,37 @@ function applyFilters() {
 
 function showAgents() {
     elCurrentPage.innerHTML = "<b>" + String(page).padStart(2, "0") + "</b> / " + String(finalPage).padStart(2, "0");
+    elParent.innerHTML = '';
 
     if (filtered.length == 0) {
         elParent.innerHTML = '<div class="text-center text-white fs-4">No agents found.</div>';
         return;
     }
 
-    var start = (page - 1) * perPage;
-    var pageAgents = filtered.slice(start, start + perPage);
+    for (let i = (page - 1) * perPage; i < page * perPage && i < filtered.length; i++) {
+        const agent = filtered[i];
 
-    var html = '';
-
-    pageAgents.forEach(agent => {
         var role = agent.role ? agent.role.displayName : "Agent";
         var icon = agent.role ? agent.role.displayIcon : "";
-
         var hex = (agent.backgroundGradientColors[0] || "b4414f").slice(0, 6);
         var accent = "#" + hex;
         var accentSoft = "#" + hex + "55";
-
         var roleColor = roleColors[role.toLowerCase()] || accent;
 
-        html += `
+        elParent.innerHTML += `
           <div class="col-6 col-lg-3">
-            <div class="agent-card" onclick="openAgent('${agent.uuid}')" style="--role: ${roleColor}; --accent: ${accent}; --accent-soft: ${accentSoft};">
-              <div class="bg-name">${agent.displayName}</div>
-              <img class="agent-img" src="${agent.fullPortrait}" alt="${agent.displayName}">
+            <div class="agent-card" onclick="openAgent('` + agent.uuid + `')" style="--role: ` + roleColor + `; --accent: ` + accent + `; --accent-soft: ` + accentSoft + `;">
+              <div class="bg-name">` + agent.displayName + `</div>
+              <img class="agent-img" src="` + agent.fullPortrait + `" alt="` + agent.displayName + `">
               <div class="role">
-                <img class="role-icon" src="${icon}" alt="">
-                <span>${role}</span>
+                <img class="role-icon" src="` + icon + `" alt="">
+                <span>` + role + `</span>
               </div>
-              <div class="name">${agent.displayName}</div>
+              <div class="name">` + agent.displayName + `</div>
             </div>
           </div>
         `;
-    });
-
-    elParent.innerHTML = html;
+    }
 }
 
 function openAgent(uuid) {
@@ -130,13 +131,17 @@ function openAgent(uuid) {
     document.getElementById("mName").innerHTML = agent.displayName;
     document.getElementById("mDesc").innerHTML = agent.description;
 
-    currentAbilities = agent.abilities.filter(a => a.displayIcon);
+    currentAbilities = [];
+    for (let i = 0; i < agent.abilities.length; i++) {
+        if (agent.abilities[i].displayIcon) {
+            currentAbilities.push(agent.abilities[i]);
+        }
+    }
 
-    var abilityHtml = '';
-    currentAbilities.forEach((ability, i) => {
-        abilityHtml += `<img class="ability-icon" src="${ability.displayIcon}" alt="${ability.displayName}" onclick="showAbility(${i})">`;
-    });
-    document.getElementById("mAbilityRow").innerHTML = abilityHtml;
+    document.getElementById("mAbilityRow").innerHTML = '';
+    for (let i = 0; i < currentAbilities.length; i++) {
+        document.getElementById("mAbilityRow").innerHTML += `<img class="ability-icon" src="` + currentAbilities[i].displayIcon + `" alt="` + currentAbilities[i].displayName + `" onclick="showAbility(` + i + `)">`;
+    }
 
     showAbility(0);
     agentModal.show();
@@ -145,7 +150,10 @@ function openAgent(uuid) {
 function showAbility(i) {
     var ability = currentAbilities[i];
     var icons = document.querySelectorAll(".ability-icon");
-    icons.forEach((el, n) => el.classList.toggle("active", n == i));
+
+    for (let n = 0; n < icons.length; n++) {
+        icons[n].classList.toggle("active", n == i);
+    }
 
     var tag = document.getElementById("mAbilityTag");
     document.getElementById("mAbilityName").innerHTML = ability.displayName;
@@ -154,14 +162,16 @@ function showAbility(i) {
     tag.classList.toggle("ultimate", ability.slot == "Ultimate");
 }
 
-roleButtons.forEach(btn => {
-    btn.addEventListener("click", () => {
-        roleButtons.forEach(b => b.classList.remove("active"));
-        btn.classList.add("active");
-        currentRole = btn.dataset.role;
+for (let i = 0; i < roleButtons.length; i++) {
+    roleButtons[i].addEventListener("click", () => {
+        for (let j = 0; j < roleButtons.length; j++) {
+            roleButtons[j].classList.remove("active");
+        }
+        roleButtons[i].classList.add("active");
+        currentRole = roleButtons[i].dataset.role;
         applyFilters();
     });
-});
+}
 
 elSearch.addEventListener("input", () => {
     searchText = elSearch.value.trim().toLowerCase();
@@ -202,12 +212,27 @@ var mapModal = new bootstrap.Modal(document.getElementById("mapModal"));
 const getMaps = async () => {
     const response = await fetch('https://valorant-api.com/v1/maps');
     const result = await response.json();
-    allMaps = result.data.filter(m => m.tacticalDescription && m.displayIcon);
+
+    allMaps = [];
+    for (let i = 0; i < result.data.length; i++) {
+        const m = result.data[i];
+        if (m.tacticalDescription && m.displayIcon) {
+            allMaps.push(m);
+        }
+    }
+
     applyMapFilters();
 }
 
 function applyMapFilters() {
-    filteredMaps = allMaps.filter(m => m.displayName.toLowerCase().includes(mapSearchText));
+    filteredMaps = [];
+
+    for (let i = 0; i < allMaps.length; i++) {
+        if (allMaps[i].displayName.toLowerCase().includes(mapSearchText)) {
+            filteredMaps.push(allMaps[i]);
+        }
+    }
+
     mapFinalPage = Math.max(1, Math.ceil(filteredMaps.length / mapPerPage));
     mapCurrent = 1;
     showMaps();
@@ -215,33 +240,29 @@ function applyMapFilters() {
 
 function showMaps() {
     elMapPage.innerHTML = "<b>" + String(mapCurrent).padStart(2, "0") + "</b> / " + String(mapFinalPage).padStart(2, "0");
+    elMapParent.innerHTML = '';
 
     if (filteredMaps.length == 0) {
         elMapParent.innerHTML = '<div class="text-center text-white fs-4">No maps found.</div>';
         return;
     }
 
-    var start = (mapCurrent - 1) * mapPerPage;
-    var pageMaps = filteredMaps.slice(start, start + mapPerPage);
+    for (let i = (mapCurrent - 1) * mapPerPage; i < mapCurrent * mapPerPage && i < filteredMaps.length; i++) {
+        const map = filteredMaps[i];
 
-    var html = '';
-
-    pageMaps.forEach(map => {
-        html += `
+        elMapParent.innerHTML += `
           <div class="col-6 col-lg-4">
-            <div class="map-card" onclick="openMap('${map.uuid}')">
-              <img class="map-img" src="${map.splash}" alt="${map.displayName}">
-              <div class="map-coords">${map.coordinates || ""}</div>
-              <div class="map-name">${map.displayName}</div>
+            <div class="map-card" onclick="openMap('` + map.uuid + `')">
+              <img class="map-img" src="` + map.splash + `" alt="` + map.displayName + `">
+              <div class="map-coords">` + (map.coordinates || "") + `</div>
+              <div class="map-name">` + map.displayName + `</div>
               <svg class="map-icon" viewBox="0 0 24 24">
                 <path d="M9 4L3 6v14l6-2 6 2 6-2V4l-6 2-6-2zM9 4v14M15 6v14" />
               </svg>
             </div>
           </div>
         `;
-    });
-
-    elMapParent.innerHTML = html;
+    }
 }
 
 function openMap(uuid) {
@@ -255,11 +276,16 @@ function openMap(uuid) {
     document.getElementById("mapMSite").innerHTML = map.tacticalDescription;
     document.getElementById("mapMIcon").src = map.displayIcon;
 
-    var calloutHtml = '';
-    (map.callouts || []).forEach(c => {
-        calloutHtml += `<span class="callout-chip">${c.regionName} (${c.superRegionName})</span>`;
-    });
-    document.getElementById("mapMCallouts").innerHTML = calloutHtml || '<span class="callout-chip">No callouts</span>';
+    var callouts = map.callouts || [];
+    document.getElementById("mapMCallouts").innerHTML = '';
+
+    for (let i = 0; i < callouts.length; i++) {
+        document.getElementById("mapMCallouts").innerHTML += '<span class="callout-chip">' + callouts[i].regionName + ' (' + callouts[i].superRegionName + ')</span>';
+    }
+
+    if (callouts.length == 0) {
+        document.getElementById("mapMCallouts").innerHTML = '<span class="callout-chip">No callouts</span>';
+    }
 
     mapModal.show();
 }
@@ -291,7 +317,9 @@ var navLinks = document.querySelectorAll(".left-nav a");
 var navSections = ["Play", "Agents", "Maps"];
 
 function setActive(id) {
-    navLinks.forEach(a => a.classList.toggle("active", a.getAttribute("href") == "#" + id));
+    for (let i = 0; i < navLinks.length; i++) {
+        navLinks[i].classList.toggle("active", navLinks[i].getAttribute("href") == "#" + id);
+    }
 }
 
 function updateNav() {
@@ -301,12 +329,12 @@ function updateNav() {
     if (atBottom) {
         current = "Maps";
     } else {
-        navSections.forEach(id => {
-            var el = document.getElementById(id);
+        for (let i = 0; i < navSections.length; i++) {
+            var el = document.getElementById(navSections[i]);
             if (el && el.getBoundingClientRect().top <= 120) {
-                current = id;
+                current = navSections[i];
             }
-        });
+        }
     }
     setActive(current);
 }

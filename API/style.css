@@ -26,8 +26,8 @@ body::-webkit-scrollbar {
     src: url('fonts/valorant/Valorant Font.ttf') format('truetype');
 }
 
-.rajdhani-regular {
-    font-family: "Rajdhani", sans-serif;
+.barlow-regular {
+    font-family: "Barlow", sans-serif;
     font-weight: 400;
     font-style: normal;
 }
@@ -480,7 +480,7 @@ p {
     line-height: 1.5;
     color: #b6bcc8;
     margin-bottom: 18px;
-    font-family: "Rajdhani", sans-serif;
+    font-family: "Barlow", sans-serif;
 }
 
 .m-heading {
@@ -547,7 +547,7 @@ p {
     font-size: 0.72rem;
     line-height: 1.5;
     color: #b6bcc8;
-    font-family: "Rajdhani", sans-serif;
+    font-family: "Barlow", sans-serif;
 }
 
 .pager {
@@ -595,8 +595,13 @@ p {
     z-index: -1;
 }
 
-.pager-btn:hover::after { transform: translateX(0); }
-.pager-btn:active { transform: scale(0.96); }
+.pager-btn:hover::after {
+    transform: translateX(0);
+}
+
+.pager-btn:active {
+    transform: scale(0.96);
+}
 
 .pager-btn svg {
     width: clamp(11px, 2.5vw, 16px);
@@ -732,7 +737,7 @@ p {
     border-radius: 3px;
     background: rgba(10, 16, 23, 0.8);
     color: #fff;
-    font-family: "Rajdhani";
+    font-family: "Barlow", sans-serif;
     font-size: clamp(0.55rem, 2vw, 0.8rem);
 }
 
@@ -795,7 +800,7 @@ p {
 }
 
 .map-m-coords {
-    font-family: "Rajdhani";
+    font-family: "Barlow", sans-serif;
     font-size: 1.5rem;
 }
 
@@ -844,6 +849,6 @@ p {
     border-radius: 4px;
     background: #0f1923;
     color: #fff;
-    font-family: "Rajdhani", sans-serif;
+    font-family: "Barlow", sans-serif;
     font-size: 0.7rem;
 }
