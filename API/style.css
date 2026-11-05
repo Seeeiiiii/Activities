@@ -1238,3 +1238,31 @@ p {
         font-size: 0.65rem;
         color: var(--muted);
 }
+
+.footer {
+    padding: 15px 0;
+    border-top: 2px solid #FE4350;
+    background: #0f1923;
+}
+
+.footer img {
+    height: clamp(24px, 7vw, 40px);
+    width: auto;
+}
+
+.footer-content p {
+     font-family: 'Barlow', sans-serif;
+    font-size: clamp(0.7rem, 3vw, 1rem);
+    color: #ffffff;
+    text-decoration: none;
+    transition: color 0.2s ease-in-out;
+}
+
+.footer-copy {
+    font-family: 'Barlow', sans-serif;
+    font-weight: 600;
+    font-size: 0.7rem;
+    letter-spacing: 0.1em;
+    color: var(--muted);
+}
+
