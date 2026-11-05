@@ -33,7 +33,8 @@ body::-webkit-scrollbar {
 }
 
 #Agents,
-#Maps {
+#Maps,
+#Guns {
     scroll-margin-top: 70px;
 }
 
@@ -739,6 +740,7 @@ p {
     color: #fff;
     font-family: "Barlow", sans-serif;
     font-size: clamp(0.55rem, 2vw, 0.8rem);
+    letter-spacing: 1px;
 }
 
 .map-name {
@@ -801,7 +803,8 @@ p {
 
 .map-m-coords {
     font-family: "Barlow", sans-serif;
-    font-size: 1.5rem;
+    font-size: 1.2rem;
+    letter-spacing: 1px;
 }
 
 .map-panel {
@@ -851,4 +854,387 @@ p {
     color: #fff;
     font-family: "Barlow", sans-serif;
     font-size: 0.7rem;
+}
+
+:root {
+    --red: #FE4350;
+    --panel: #0f1923;
+    --muted: #9aa3b2;
+}
+
+.ars-section {
+    position: relative;
+    overflow: hidden;
+    min-height: 100vh;
+}
+
+.ars-watermark {
+    position: absolute;
+    left: 10px;
+    top: 50%;
+    transform: translateY(-50%) rotate(180deg);
+    writing-mode: vertical-rl;
+    font-family: 'Motion-control', sans-serif;
+    font-size: clamp(3rem, 8vw, 6rem);
+    line-height: 1;
+    color: transparent;
+    -webkit-text-stroke: 1px rgba(255, 255, 255, 0.35);
+    pointer-events: none;
+    z-index: 0;
+}
+
+.ars-search {
+    width: 250px;
+    max-width: 100%;
+    background-color: var(--panel);
+    color: #fff;
+    font-family: 'Motion-control', sans-serif;
+    font-size: 1rem;
+    padding: 8px 16px;
+    border: 2px solid var(--red);
+    border-radius: 6px;
+}
+
+.ars-search::placeholder {
+    color: rgba(255, 255, 255, 0.6);
+    font-family: 'Motion-control', sans-serif;
+}
+
+.ars-search:focus {
+    background-color: var(--panel);
+    color: #fff;
+    border-color: var(--red);
+    box-shadow: 0 0 10px rgba(254, 67, 80, 0.5);
+    outline: none;
+}
+
+.ars-tab {
+    position: relative;
+    isolation: isolate;
+    border: none;
+    background: transparent;
+    color: #fff;
+    font-family: 'Motion-control', sans-serif;
+    font-size: clamp(0.7rem, 2.8vw, 1rem);
+    letter-spacing: 1px;
+    padding: 8px clamp(12px, 3vw, 20px);
+    clip-path: polygon(0 0, calc(100% - 10px) 0, 100% 10px, 100% 100%, 10px 100%, 0 calc(100% - 10px));
+    transition: color 0.2s ease-in-out;
+}
+
+.ars-tab::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    z-index: -2;
+    background: rgba(255, 255, 255, 0.25);
+}
+
+.ars-tab::after {
+    content: "";
+    position: absolute;
+    inset: 2px;
+    z-index: -1;
+    background: var(--panel);
+    clip-path: polygon(0 0, calc(100% - 8px) 0, 100% 8px, 100% 100%, 8px 100%, 0 calc(100% - 8px));
+    transition: background 0.2s ease-in-out;
+}
+
+.ars-tab:hover::before {
+    background: var(--red);
+}
+
+.ars-tab.active::before {
+    background: var(--red);
+}
+
+.ars-tab.active::after {
+    background: var(--red);
+}
+
+.ars-card {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    padding: 14px 14px 14px 18px;
+    cursor: pointer;
+    background: linear-gradient(160deg, #1a1f2b, #0f1923);
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    clip-path: polygon(0 0, calc(100% - 18px) 0, 100% 18px, 100% 100%, 0 100%);
+    transition: transform 0.2s ease-in-out, background 0.2s ease-in-out;
+}
+
+.ars-card::before {
+    content: "";
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 4px;
+    height: 100%;
+    background: var(--red);
+    opacity: 0.35;
+    transition: opacity 0.2s ease-in-out;
+}
+
+.ars-card:hover {
+    transform: translateY(-4px);
+    background: linear-gradient(160deg, #262d3d, #131c28);
+}
+
+.ars-card:hover::before {
+    opacity: 1;
+}
+
+.ars-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 6px;
+    padding-right: 14px;
+}
+
+.ars-cat {
+    font-family: 'Barlow', sans-serif;
+    font-weight: 600;
+    font-size: clamp(0.6rem, 2vw, 0.8rem);
+    letter-spacing: 0.12em;
+    color: var(--muted);
+    text-transform: uppercase;
+}
+
+.ars-cost {
+    font-family: 'Motion-control', sans-serif;
+    color: var(--red);
+    font-size: clamp(0.7rem, 2.6vw, 1rem);
+}
+
+.ars-stage {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 14px 0;
+}
+
+.ars-img {
+    width: 100%;
+    max-height: clamp(50px, 10vw, 80px);
+    object-fit: contain;
+    transition: transform 0.3s ease-in-out;
+}
+
+.ars-card:hover .ars-img {
+    transform: scale(1.1);
+}
+
+.ars-name {
+    font-family: 'Motion-control', sans-serif;
+    color: #fff;
+    text-transform: uppercase;
+    font-size: clamp(0.9rem, 3.5vw, 1.3rem);
+    margin-bottom: 8px;
+}
+
+.ars-bar-row {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    margin-top: 4px;
+}
+
+.ars-bar-label {
+    width: 36px;
+    font-family: 'Barlow', sans-serif;
+    font-weight: 600;
+    font-size: 0.65rem;
+    letter-spacing: 0.08em;
+    color: var(--muted);
+}
+
+.ars-bar {
+    flex: 1;
+    height: 4px;
+    background: rgba(255, 255, 255, 0.12);
+}
+
+.ars-bar-fill {
+    height: 100%;
+    background: var(--red);
+}
+
+.ars-bar-value {
+    width: 30px;
+    text-align: right;
+    font-family: 'Barlow', sans-serif;
+    font-weight: 600;
+    font-size: 0.72rem;
+    color: #fff;
+}
+
+.ars-modal {
+    position: relative;
+    overflow: hidden;
+    color: #fff;
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    border-radius: 8px;
+    background:
+        radial-gradient(circle at 20% 20%, rgba(254, 67, 80, 0.25), transparent 55%),
+        #12151d;
+}
+
+.ars-close {
+    position: absolute;
+    top: 8px;
+    right: 14px;
+    z-index: 5;
+    background: none;
+    border: none;
+    color: #fff;
+    font-family: 'Motion-control', sans-serif;
+    font-size: 2rem;
+}
+
+.ars-close:hover {
+    color: var(--red);
+}
+
+.ars-stage-big {
+    height: 100%;
+    min-height: 200px;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 14px;
+    border: 1px solid rgba(255, 255, 255, 0.25);
+    border-radius: 6px;
+    background: rgba(15, 25, 35, 0.55);
+}
+
+.ars-stage-big img {
+    width: 100%;
+    max-height: 130px;
+    object-fit: contain;
+}
+
+.ars-pill {
+    padding: 3px 14px;
+    border: 1px solid var(--red);
+    border-radius: 6px;
+    background: var(--panel);
+    font-family: 'Motion-control', sans-serif;
+    font-size: 0.8rem;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+}
+
+.ars-modal-name {
+    font-family: 'Motion-control', sans-serif;
+    font-size: clamp(1.5rem, 6vw, 2.2rem);
+    text-transform: uppercase;
+}
+
+.ars-heading {
+    font-family: 'Motion-control', sans-serif;
+    font-size: 1.3rem;
+    margin-bottom: 14px;
+}
+
+.ars-stat {
+    padding: 8px 12px;
+    border: 1px solid rgba(255, 255, 255, 0.25);
+    border-radius: 6px;
+    background: rgba(15, 25, 35, 0.55);
+}
+
+.ars-stat-label {
+    font-family: 'Barlow', sans-serif;
+    font-weight: 600;
+    font-size: 0.72rem;
+    letter-spacing: 0.08em;
+    color: var(--muted);
+}
+
+.ars-stat-value {
+    font-family: 'Motion-control', sans-serif;
+    font-size: clamp(0.9rem, 3.5vw, 1.15rem);
+    color: #fff;
+}
+
+.ars-table {
+    --bs-table-bg: transparent;
+    --bs-table-color: #fff;
+    --bs-table-border-color: rgba(255, 255, 255, 0.2);
+    font-family: 'Barlow', sans-serif;
+    font-weight: 500;
+}
+
+.ars-table th {
+    font-family: 'Motion-control', sans-serif;
+    font-weight: normal;
+    color: var(--red);
+    font-size: 0.85rem;
+}
+
+.ars-kicker {
+        font-family: 'Barlow', sans-serif;
+        font-weight: 700;
+        letter-spacing: 0.25em;
+        font-size: 0.8rem;
+        color: var(--red);
+}
+
+.ars-stripes {
+        display: inline-block;
+        width: 46px;
+        height: 10px;
+        background: repeating-linear-gradient(135deg, var(--red) 0 4px, transparent 4px 8px);
+}
+
+.ars-big {
+        font-family: 'Motion-control', sans-serif;
+        font-size: clamp(2.5rem, 11vw, 4rem);
+        line-height: 1;
+        color: #fff;
+        text-transform: uppercase;
+        margin: 8px 0;
+}
+
+.ars-big span {
+        color: transparent;
+        -webkit-text-stroke: 2px var(--red);
+}
+
+.ars-sub {
+        font-family: 'Barlow', sans-serif;
+        font-weight: 500;
+        letter-spacing: 0.2em;
+        font-size: clamp(0.7rem, 2.6vw, 0.60rem);
+        color: var(--muted);
+}
+
+.total {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        padding: 6px 18px;
+        border-left: 3px solid var(--red);
+        background: rgba(255, 255, 255, 0.05);
+}
+
+.total span {
+        font-family: 'Motion-control', sans-serif;
+        font-size: 2rem;
+        line-height: 1;
+        color: #fff;
+}
+
+.total small {
+        font-family: 'Barlow', sans-serif;
+        font-weight: 600;
+        letter-spacing: 0.15em;
+        font-size: 0.65rem;
+        color: var(--muted);
 }

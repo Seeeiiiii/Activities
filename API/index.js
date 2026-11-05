@@ -199,6 +199,7 @@ getAgents();
 var elMapParent = document.getElementById("mapParent");
 var elMapPage = document.getElementById("mapPage");
 var elMapSearch = document.getElementById("searchMap");
+var elMapsCount = document.getElementById("mapsCount");
 
 var allMaps = [];
 var filteredMaps = [];
@@ -233,9 +234,12 @@ function applyMapFilters() {
         }
     }
 
+    elMapsCount.innerHTML = filteredMaps.length;
     mapFinalPage = Math.max(1, Math.ceil(filteredMaps.length / mapPerPage));
     mapCurrent = 1;
     showMaps();
+
+    
 }
 
 function showMaps() {
@@ -313,8 +317,238 @@ function nextMap() {
 
 getMaps();
 
+var elGunParent = document.getElementById("gunParent");
+var elGunTabs = document.getElementById("gunTabs");
+var elGunCount = document.getElementById("gunCount");
+var elGunSearch = document.getElementById("searchGun");
+
+var allGuns = [];
+var filteredGuns = [];
+var gunCategories = [];
+var gunCategory = "All";
+var gunSearchText = "";
+
+var elGunPage = document.getElementById("gunPage");
+
+var gunCurrent = 1;
+var gunPerPage = isSmall ? 12 : 8;
+var gunFinalPage = 1;
+
+var gunModal = new bootstrap.Modal(document.getElementById("gunModal"));
+
+function cleanText(text) {
+    if (!text) {
+        return "-";
+    }
+    return text.split("::").pop();
+}
+
+function num(value) {
+    return Math.round(value * 100) / 100;
+}
+
+function gunCost(gun) {
+    if (!gun.shopData) {
+        return "-";
+    }
+    if (gun.shopData.cost > 0) {
+        return gun.shopData.cost;
+    }
+    return "FREE";
+}
+
+function getBar(label, value, max) {
+    var percent = Math.min(100, Math.round(value / max * 100));
+    var text = value > 0 ? num(value) : "-";
+
+    return '<div class="ars-bar-row"><span class="ars-bar-label">' + label + '</span><div class="ars-bar"><div class="ars-bar-fill" style="width: ' + percent + '%"></div></div><span class="ars-bar-value">' + text + '</span></div>';
+}
+
+const getGuns = async () => {
+    try {
+        const response = await fetch('https://valorant-api.com/v1/weapons');
+        const result = await response.json();
+
+        allGuns = [];
+        gunCategories = [];
+
+        for (let i = 0; i < result.data.length; i++) {
+            const g = result.data[i];
+
+            if (g.displayIcon) {
+                allGuns.push(g);
+
+                var c = cleanText(g.category);
+                if (!gunCategories.includes(c)) {
+                    gunCategories.push(c);
+                }
+            }
+        }
+
+        showGunTabs();
+        applyGunFilters();
+    } catch (error) {
+        elGunParent.innerHTML = '<div class="text-center text-white fs-5">Could not load guns: ' + error.message + '</div>';
+    }
+}
+
+function showGunTabs() {
+    elGunTabs.innerHTML = '';
+
+    var activeAll = gunCategory == "All" ? " active" : "";
+    elGunTabs.innerHTML += '<button class="ars-tab' + activeAll + '" onclick="setGunCategory(\'All\')">ALL</button>';
+
+    for (let i = 0; i < gunCategories.length; i++) {
+        var active = gunCategory == gunCategories[i] ? " active" : "";
+        elGunTabs.innerHTML += '<button class="ars-tab' + active + '" onclick="setGunCategory(\'' + gunCategories[i] + '\')">' + gunCategories[i].toUpperCase() + '</button>';
+    }
+}
+
+function setGunCategory(name) {
+    gunCategory = name;
+    showGunTabs();
+    applyGunFilters();
+}
+
+function applyGunFilters() {
+    filteredGuns = [];
+
+    for (let i = 0; i < allGuns.length; i++) {
+        const gun = allGuns[i];
+        var matchCategory = gunCategory == "All" || cleanText(gun.category) == gunCategory;
+        var matchName = gun.displayName.toLowerCase().includes(gunSearchText);
+
+        if (matchCategory && matchName) {
+            filteredGuns.push(gun);
+        }
+    }
+
+    elGunCount.innerHTML = filteredGuns.length;
+    gunFinalPage = Math.max(1, Math.ceil(filteredGuns.length / gunPerPage));
+    gunCurrent = 1;
+    showGuns();
+}
+
+function showGuns() {
+    elGunPage.innerHTML = "<b>" + String(gunCurrent).padStart(2, "0") + "</b> / " + String(gunFinalPage).padStart(2, "0");
+    elGunParent.innerHTML = '';
+
+    if (filteredGuns.length == 0) {
+        elGunParent.innerHTML = '<div class="text-center text-white fs-4">No guns found.</div>';
+        return;
+    }
+
+    for (let i = (gunCurrent - 1) * gunPerPage; i < gunCurrent * gunPerPage && i < filteredGuns.length; i++) {
+        const gun = filteredGuns[i];
+        var stats = gun.weaponStats;
+
+        var damage = 0;
+        var fireRate = 0;
+        var magazine = 0;
+
+        if (stats) {
+            fireRate = stats.fireRate;
+            magazine = stats.magazineSize;
+
+            if (stats.damageRanges && stats.damageRanges.length > 0) {
+                damage = stats.damageRanges[0].headDamage;
+            }
+        }
+
+        elGunParent.innerHTML += `
+            <div class="col-6 col-lg-3">
+                <div class="ars-card" onclick="openGun('` + gun.uuid + `')">
+                    <div class="ars-top">
+                        <div class="ars-cat">` + cleanText(gun.category) + `</div>
+                        <div class="ars-cost">` + gunCost(gun) + `</div>
+                    </div>
+                    <div class="ars-stage">
+                        <img class="ars-img" src="` + gun.displayIcon + `" alt="` + gun.displayName + `">
+                    </div>
+                    <div class="ars-name">` + gun.displayName + `</div>
+                    ` + getBar("DMG", damage, 255) + `
+                    ` + getBar("RATE", fireRate, 16) + `
+                    ` + getBar("MAG", magazine, 100) + `
+                </div>
+            </div>
+        `;
+    }
+}
+
+function openGun(uuid) {
+    var gun = allGuns.find(g => g.uuid == uuid);
+    var stats = gun.weaponStats;
+
+    document.getElementById("gMName").innerHTML = gun.displayName;
+    document.getElementById("gMCategory").innerHTML = cleanText(gun.category);
+    document.getElementById("gMIcon").src = gun.displayIcon;
+
+    var statList = [["COST", gunCost(gun)]];
+    var ranges = [];
+
+    if (stats) {
+        statList = [
+            ["FIRE RATE", num(stats.fireRate) + " /s"],
+            ["MAGAZINE", stats.magazineSize],
+            ["RELOAD", num(stats.reloadTimeSeconds) + "s"],
+            ["EQUIP", num(stats.equipTimeSeconds) + "s"],
+            ["RUN SPEED", num(stats.runSpeedMultiplier) + "x"],
+            ["WALL PEN", cleanText(stats.wallPenetration).toUpperCase()],
+            ["FIRST BULLET", num(stats.firstBulletAccuracy)],
+            ["COST", gunCost(gun)]
+        ];
+        ranges = stats.damageRanges || [];
+    }
+
+    document.getElementById("gMStats").innerHTML = '';
+    for (let i = 0; i < statList.length; i++) {
+        document.getElementById("gMStats").innerHTML += '<div class="col-6"><div class="ars-stat"><div class="ars-stat-label">' + statList[i][0] + '</div><div class="ars-stat-value">' + statList[i][1] + '</div></div></div>';
+    }
+
+    document.getElementById("gMDamage").innerHTML = '';
+    for (let i = 0; i < ranges.length; i++) {
+        document.getElementById("gMDamage").innerHTML += `
+            <tr>
+                <td>` + Math.round(ranges[i].rangeStartMeters) + `-` + Math.round(ranges[i].rangeEndMeters) + ` m</td>
+                <td>` + Math.round(ranges[i].headDamage) + `</td>
+                <td>` + Math.round(ranges[i].bodyDamage) + `</td>
+                <td>` + Math.round(ranges[i].legDamage) + `</td>
+            </tr>
+        `;
+    }
+
+    if (ranges.length == 0) {
+        document.getElementById("gMDamage").innerHTML = '<tr><td colspan="4">No damage data.</td></tr>';
+    }
+
+    gunModal.show();
+}
+
+elGunSearch.addEventListener("input", () => {
+    gunSearchText = elGunSearch.value.trim().toLowerCase();
+    applyGunFilters();
+});
+
+function prevGun() {
+    gunCurrent -= 1;
+    if (gunCurrent == 0) {
+        gunCurrent = gunFinalPage;
+    }
+    showGuns();
+}
+
+function nextGun() {
+    gunCurrent += 1;
+    if (gunCurrent > gunFinalPage) {
+        gunCurrent = 1;
+    }
+    showGuns();
+}
+
+getGuns();
+
 var navLinks = document.querySelectorAll(".left-nav a");
-var navSections = ["Play", "Agents", "Maps"];
+var navSections = ["Play", "Agents", "Maps", "Guns"];
 
 function setActive(id) {
     for (let i = 0; i < navLinks.length; i++) {
@@ -327,7 +561,7 @@ function updateNav() {
     var atBottom = window.innerHeight + window.scrollY >= document.documentElement.scrollHeight - 5;
 
     if (atBottom) {
-        current = "Maps";
+        current = "Guns";
     } else {
         for (let i = 0; i < navSections.length; i++) {
             var el = document.getElementById(navSections[i]);
